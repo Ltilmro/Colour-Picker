@@ -601,8 +601,24 @@ function changeColor(e) {
   assRgb(imageData[0],imageData[1],imageData[2]);
   document.body.style.backgroundColor = rgbaColor;
 }
-
+function mousedoown(e) {
+    drag = true;
+    click(e);
+  }
+  
+  function mousemoove(e) {
+    if (drag) {
+      click(e);
+    }
+  }
+  
+  function mouseuup(e) {
+    drag = false;
+  }
 colorStrip.addEventListener("click", click, false);
+colorStrip.addEventListener("mousedown", mousedoown, false);
+colorStrip.addEventListener("mouseup", mouseuup, false);
+colorStrip.addEventListener("mousemove", mousemoove, false);
 
 colorBlock.addEventListener("mousedown", mousedown, false);
 colorBlock.addEventListener("mouseup", mouseup, false);

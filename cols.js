@@ -366,6 +366,27 @@ function assRgb(a,b,c)
     ccInput.value=cInput.value;
     doRgb();
 }
+function assHue(a,b,c)
+{
+    let maxx=Math.max(a/255,b/255,c/255);
+    let minn=Math.min(a/255,b/255,c/255);
+    let del=maxx-minn;
+    if(maxx-minn==0){
+        hInput.value=0;
+    }else if(maxx==a/255){
+        hInput.value=60*((b/255-c/255)/del)
+    }else if(maxx==b/255){
+        hInput.value=60*(2+(c/255-a/255)/del)
+    }else if(maxx==c/255){
+        hInput.value=60*(4+(a/255-b/255)/del)
+    }
+    hInput.value=hInput.value%360;
+    if(hInput.value<0){
+        hInput.value=360 + Number(hInput.value);
+    }
+    hhInput.value=hInput.value;
+    doHsv();
+}
 aInput.addEventListener('input',()=>{
     aaInput.value=aInput.value;
     doRgb();
@@ -558,6 +579,8 @@ function click(e) {
   y = e.offsetY;
   var imageData = ctx2.getImageData(x, y, 1, 1).data;
   rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
+  assHue(imageData[0],imageData[1],imageData[2]);
+ //document.body.style.backgroundColor = rgbaColor;
   fillGradient();
 }
 
@@ -599,7 +622,7 @@ function changeColor(e) {
   var imageData = ctx1.getImageData(x, y, 1, 1).data;
   rgbaColor = 'rgba(' + imageData[0] + ',' + imageData[1] + ',' + imageData[2] + ',1)';
   assRgb(imageData[0],imageData[1],imageData[2]);
-  document.body.style.backgroundColor = rgbaColor;
+  //document.body.style.backgroundColor = rgbaColor;
 }
 function mousedoown(e) {
     drag = true;

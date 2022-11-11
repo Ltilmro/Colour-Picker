@@ -1,3 +1,20 @@
+var rgbaColor = 'rgba(255,0,0,1)';
+var colorBlock = document.getElementById('color-block');
+var ctx1 = colorBlock.getContext('2d');
+var width1 = colorBlock.width;
+var height1 = colorBlock.height;
+
+var colorStrip = document.getElementById('color-strip');
+var ctx2 = colorStrip.getContext('2d');
+var width2 = colorStrip.width;
+var height2 = colorStrip.height;
+
+var colorLabel = document.getElementById('color-label');
+
+var x = 0;
+var y = 0;
+var drag = false;
+
 let aInput=document.querySelector('#a');
 let aaInput=document.querySelector('#aa');
 let bbInput=document.querySelector('#bb');
@@ -294,11 +311,86 @@ function labToXyz()
         document.getElementById("err").innerHTML = "";
     }
 }
+function fix()
+{
+    aInput.value=Math.round(aInput.value*100)/100;
+    bInput.value=Math.round(bInput.value*100)/100;
+    cInput.value=Math.round(cInput.value*100)/100;
+    dInput.value=Math.round(dInput.value*10000)/10000;
+    eInput.value=Math.round(eInput.value*10000)/10000;
+    fInput.value=Math.round(fInput.value*10000)/10000;
+    gInput.value=Math.round(gInput.value*10000)/10000;
+    hInput.value=Math.round(hInput.value*100)/100;
+    iInput.value=Math.round(iInput.value*10000)/10000;
+    jInput.value=Math.round(jInput.value*10000)/10000;
+    kInput.value=Math.round(kInput.value*100)/100;
+    lInput.value=Math.round(lInput.value*10000)/10000;
+    mInput.value=Math.round(mInput.value*10000)/10000;
+    nInput.value=Math.round(nInput.value*10000)/10000;
+    oInput.value=Math.round(oInput.value*100)/100;
+    pInput.value=Math.round(pInput.value*100)/100;
+    xInput.value=Math.round(xInput.value*10000)/10000;
+    yInput.value=Math.round(yInput.value*10000)/10000;
+    zInput.value=Math.round(zInput.value*10000)/10000;
+}
+function rgbaise(a,b,c)
+{
+    let maxx=Math.max(a/255,b/255,c/255);
+    let minn=Math.min(a/255,b/255,c/255);
+    let del=maxx-minn;
+    let hh=0;
+    if(del==0){
+        hh=0;
+    }else if(maxx==a/255){
+        hh=60*((b/255-c/255)/del)
+    }else if(maxx==b/255){
+        hh=60*(2+(c/255-a/255)/del)
+    }else if(maxx==c/255){
+        hh=60*(4+(a/255-b/255)/del)
+    }
+    hh=hh%360;
+    if(hh<0){
+        hh=360 + Number(hh);
+    }
+    let aa=0;
+    let bb=0;
+    let cc=0;
+    let xh=(1-Math.abs((hh/60)%2-1))
+    if (hh<60){
+        aa=255
+        bb=xh*255
+        cc=0
+    }else if (hh<120){
+        aa=xh*255
+        bb=255
+        cc=0
+    }else if (hh<180){
+        aa=0
+        bb=255
+        cc=xh*255
+    }else if (hh<240){
+        aa=0
+        bb=xh*255
+        cc=255
+    }else if (hh<300){
+        aa=xh*255
+        bb=0
+        cc=255
+    }else{
+        aa=255
+        bb=0
+        cc=xh*255
+    }
+    rgbaColor = 'rgba(' + aa + ',' + bb + ',' + cc + ',1)'
+}
 function doColor()
 {
+    fix();
     let acolr=aInput.value;
     let bcolr=bInput.value;
     let ccolr=cInput.value;
+    rgbaise(acolr,bcolr,ccolr)
+    fillGradient();
     let clr="rgb("+acolr+","+bcolr+","+ccolr+")";
     document.body.style.backgroundColor=clr;
 }
@@ -387,7 +479,19 @@ function assHue(a,b,c)
     hhInput.value=hInput.value;
     doHsv();
 }
+function limitEvent(min,max,ev)
+{
+    if(ev.value<min)
+    {
+        ev.value=min;
+    }
+    if(ev.value>max)
+    {
+        ev.value=max;
+    }
+}
 aInput.addEventListener('input',()=>{
+    limitEvent(0,255,aInput);
     aaInput.value=aInput.value;
     doRgb();
 })
@@ -396,6 +500,7 @@ aaInput.addEventListener('input',()=>{
     doRgb();
 })
 bInput.addEventListener('input',()=>{
+    limitEvent(0,255,bInput);
     bbInput.value=bInput.value;
     doRgb();
 })
@@ -404,6 +509,7 @@ bbInput.addEventListener('input',()=>{
     doRgb();
 })
 cInput.addEventListener('input',()=>{
+    limitEvent(0,255,cInput);
     ccInput.value=cInput.value
     doRgb();
 })
@@ -412,6 +518,7 @@ ccInput.addEventListener('input',()=>{
     doRgb();
 })
 dInput.addEventListener('input',()=>{
+    limitEvent(0,1,dInput);
     ddInput.value=dInput.value*100
     doCmyk();
 })
@@ -420,6 +527,7 @@ ddInput.addEventListener('input',()=>{
     doCmyk();
 })
 eInput.addEventListener('input',()=>{
+    limitEvent(0,1,eInput);
     eeInput.value=eInput.value*100
     doCmyk();
 })
@@ -428,6 +536,7 @@ eeInput.addEventListener('input',()=>{
     doCmyk();
 })
 fInput.addEventListener('input',()=>{
+    limitEvent(0,1,fInput);
     ffInput.value=fInput.value*100
     doCmyk();
 })
@@ -436,6 +545,7 @@ ffInput.addEventListener('input',()=>{
     doCmyk();
 })
 gInput.addEventListener('input',()=>{
+    limitEvent(0,1,gInput);
     ggInput.value=gInput.value*100
     doCmyk();
 })
@@ -444,6 +554,7 @@ ggInput.addEventListener('input',()=>{
     doCmyk();
 })
 hInput.addEventListener('input',()=>{
+    limitEvent(0,360,hInput);
     hhInput.value=hInput.value;
     doHsv();
 })
@@ -452,6 +563,7 @@ hhInput.addEventListener('input',()=>{
     doHsv();
 })
 iInput.addEventListener('input',()=>{
+    limitEvent(0,1,iInput);
     iiInput.value=iInput.value*100;
     doHsv();
 })
@@ -460,6 +572,7 @@ iiInput.addEventListener('input',()=>{
     doHsv();
 })
 jInput.addEventListener('input',()=>{
+    limitEvent(0,1,jInput);
     jjInput.value=jInput.value*100;
     doHsv();
 })
@@ -468,6 +581,7 @@ jjInput.addEventListener('input',()=>{
     doHsv();
 })
 kInput.addEventListener('input',()=>{
+    limitEvent(0,360,kInput);
     kkInput.value=kInput.value;
     doHsl();
 })
@@ -476,6 +590,7 @@ kkInput.addEventListener('input',()=>{
     doHsl();
 })
 mInput.addEventListener('input',()=>{
+    limitEvent(0,1,mInput);
     mmInput.value=mInput.value*100;
     doHsl();
 })
@@ -484,6 +599,7 @@ mmInput.addEventListener('input',()=>{
     doHsl();
 })
 lInput.addEventListener('input',()=>{
+    limitEvent(0,1,lInput);
     llInput.value=lInput.value*100;
     doHsl();
 })
@@ -492,6 +608,7 @@ llInput.addEventListener('input',()=>{
     doHsl();
 })
 nInput.addEventListener('input',()=>{
+    limitEvent(0,100,nInput);
     nnInput.value=nInput.value;
     doLab();
 })
@@ -500,6 +617,7 @@ nnInput.addEventListener('input',()=>{
     doLab();
 })
 oInput.addEventListener('input',()=>{
+    limitEvent(-80,80,oInput);
     ooInput.value=oInput.value;
     doLab();
 })
@@ -508,6 +626,7 @@ ooInput.addEventListener('input',()=>{
     doLab();
 })
 pInput.addEventListener('input',()=>{
+    limitEvent(-80,80,pInput);
     ppInput.value=pInput.value;
     doLab();
 })
@@ -516,6 +635,7 @@ ppInput.addEventListener('input',()=>{
     doLab();
 })
 xInput.addEventListener('input',()=>{
+    limitEvent(0,1,xInput);
     xxInput.value=xInput.value*1000;
     doXyz();
 })
@@ -524,6 +644,7 @@ xxInput.addEventListener('input',()=>{
     doXyz();
 })
 yInput.addEventListener('input',()=>{
+    limitEvent(0,1,yInput);
     yyInput.value=yInput.value*1000;
     doXyz();
 })
@@ -532,6 +653,7 @@ yyInput.addEventListener('input',()=>{
     doXyz();
 })
 zInput.addEventListener('input',()=>{
+    limitEvent(0,1,zInput);
     zzInput.value=zInput.value*1000;
     doXyz();
 })
@@ -542,23 +664,6 @@ zzInput.addEventListener('input',()=>{
 //var canvas=document.getElementById('#can');
 //var x=canvas.canvas.width;
 //x=canvas.canvas.height;
-var colorBlock = document.getElementById('color-block');
-var ctx1 = colorBlock.getContext('2d');
-var width1 = colorBlock.width;
-var height1 = colorBlock.height;
-
-var colorStrip = document.getElementById('color-strip');
-var ctx2 = colorStrip.getContext('2d');
-var width2 = colorStrip.width;
-var height2 = colorStrip.height;
-
-var colorLabel = document.getElementById('color-label');
-
-var x = 0;
-var y = 0;
-var drag = false;
-var rgbaColor = 'rgba(255,0,0,1)';
-
 ctx1.rect(0, 0, width1, height1);
 fillGradient();
 

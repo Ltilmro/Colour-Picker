@@ -21,7 +21,9 @@
     height: 150px;
     width: 185px;
     opacity: 1;
-    padding: 5px;
+    margin:0;
+    border:0;
+    padding:0;
   }
   canvas:hover {
     cursor: crosshair;

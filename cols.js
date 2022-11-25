@@ -313,9 +313,9 @@ function labToXyz()
 }
 function fix()
 {
-    aInput.value=Math.round(aInput.value*100)/100;
-    bInput.value=Math.round(bInput.value*100)/100;
-    cInput.value=Math.round(cInput.value*100)/100;
+    aInput.value=Math.round(aInput.value*1)/1;
+    bInput.value=Math.round(bInput.value*1)/1;
+    cInput.value=Math.round(cInput.value*1)/1;
     dInput.value=Math.round(dInput.value*10000)/10000;
     eInput.value=Math.round(eInput.value*10000)/10000;
     fInput.value=Math.round(fInput.value*10000)/10000;
@@ -394,6 +394,15 @@ function doColor()
     let clr="rgb("+acolr+","+bcolr+","+ccolr+")";
     document.body.style.backgroundColor=clr;
 }
+function doColorNoRedraw()
+{
+    fix();
+    let acolr=aInput.value;
+    let bcolr=bInput.value;
+    let ccolr=cInput.value;
+    let clr="rgb("+acolr+","+bcolr+","+ccolr+")";
+    document.body.style.backgroundColor=clr;
+}
 function doRgb()
 {
     rgbToCmyk();
@@ -402,6 +411,15 @@ function doRgb()
     rgbToXyz();
     xyzToLab();
     doColor();
+}
+function doRgbNoRedraw()
+{
+    rgbToCmyk();
+    rgbToHsv();
+    hsvToHsl();
+    rgbToXyz();
+    xyzToLab();
+    doColorNoRedraw();
 }
 function doCmyk()
 {
@@ -456,7 +474,7 @@ function assRgb(a,b,c)
     bbInput.value=bInput.value;
     cInput.value=c;
     ccInput.value=cInput.value;
-    doRgb();
+    doRgbNoRedraw();
 }
 function assHue(a,b,c)
 {
